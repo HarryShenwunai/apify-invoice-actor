@@ -1,0 +1,10 @@
+{
+  "actorSpecification": 1,
+  "name": "invoice-to-json-extractor",
+  "title": "Invoice & Receipt PDF to Structured JSON",
+  "description": "Extract vendor, invoice number, date, currency, line items, and totals from PDF invoices or raw text into clean JSON.",
+  "version": "1.0",
+  "buildTag": "latest",
+  "input": "./input_schema.json",
+  "dockerfile": "../Dockerfile"
+}
