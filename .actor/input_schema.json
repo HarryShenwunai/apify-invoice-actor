@@ -1,0 +1,29 @@
+{
+  "title": "Invoice2JSON Actor Input",
+  "type": "object",
+  "schemaVersion": 1,
+  "properties": {
+    "pdfUrls": {
+      "title": "PDF Invoice URLs",
+      "type": "array",
+      "description": "List of public PDF invoice URLs to extract.",
+      "editor": "stringList",
+      "default": []
+    },
+    "rawTexts": {
+      "title": "Raw Invoice Texts",
+      "type": "array",
+      "description": "Optional raw invoice text snippets to parse directly.",
+      "editor": "stringList",
+      "default": []
+    },
+    "maxItems": {
+      "title": "Max Invoices per Run",
+      "type": "integer",
+      "description": "Hard cap per run to control compute and API cost.",
+      "default": 50,
+      "minimum": 1,
+      "maximum": 500
+    }
+  }
+}
