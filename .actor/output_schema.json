@@ -1,0 +1,11 @@
+{
+  "actorOutputSchemaVersion": 1,
+  "title": "Extracted Invoice Data",
+  "properties": {
+    "dataset": {
+      "type": "string",
+      "title": "Invoice Dataset",
+      "template": "{{links.apiDefaultDatasetUrl}}/items"
+    }
+  }
+}
