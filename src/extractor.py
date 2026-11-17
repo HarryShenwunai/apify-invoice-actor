@@ -57,7 +57,8 @@ async def llm_fallback_extract(text: str, source: str) -> InvoiceResult:
         raise RuntimeError("LLM_API_KEY missing for complex layout fallback")
 
     prompt = (
-        "Extract JSON with keys: vendor, invoice_no, date, currency, total (float).\n\n"
+        "Return ONLY a valid JSON object (no markdown) with keys: "
+        "vendor, invoice_no, date, currency, total (number or null).\n\n"
         f"INVOICE TEXT:\n{text[:6000]}"
     )
     async with httpx.AsyncClient(timeout=20.0) as client:
@@ -66,14 +67,15 @@ async def llm_fallback_extract(text: str, source: str) -> InvoiceResult:
             headers={"Authorization": f"Bearer {api_key}"},
             json={
                 "model": model,
-                "response_format": {"type": "json_object"},
                 "messages": [{"role": "user", "content": prompt}],
-                "temperature": 0,
             },
         )
-        resp.raise_for_status()
+        if resp.is_error:
+            raise RuntimeError(f"LLM {resp.status_code}: {resp.text[:300]}")
         payload: dict[str, Any] = resp.json()
-        data = json.loads(payload["choices"][0]["message"]["content"])
+        raw_content = payload["choices"][0]["message"]["content"].strip()
+        raw_content = re.sub(r"^```(?:json)?\s*|\s*```$", "", raw_content)
+        data = json.loads(raw_content)
         return InvoiceResult(
             source=source,
             vendor=data.get("vendor"),
